@@ -8,8 +8,7 @@ var request = require('request-promise-native');
 const createUploadFileName = function(imgData, config) {
   let hash = md5(imgData.img);
   // 使用alias做为子路径
-  let prePath = imgData.alias.startsWith('~')? imgData.alias.substring(1): imgData.alias;
-  let img = `${prePath}/${hash}_${imgData.fileName}`;
+  let img = `${imgData.cdnPrePath}/${hash}_${imgData.fileName}`;
 
   return img;
 };
@@ -27,7 +26,7 @@ const uploadFile = function(imgData, config) {
     formData: {
       uid: oss.uid,
       uname: oss.uname,
-      object: oss.subPath + createUploadFileName(imgData, config),
+      object: createUploadFileName(imgData, config),
       file: fs.createReadStream(file)
     },
     headers: {
@@ -45,7 +44,6 @@ const uploadFile = function(imgData, config) {
       return Promise.reject(res.data.error);
     }
     let data = res.data;
-    console.log(colors.green('[上传成功]'), data.fid);
     return data;
   }).catch(e => {
     console.log(colors.red('[上传失败]'), file, colors.red('[原因]'), e && e.message);
