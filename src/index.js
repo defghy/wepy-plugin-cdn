@@ -1,7 +1,6 @@
-var md5 = require('md5');
 var uploadFile = require('./utils/upload.js');
+var colors = require('colors/safe');
 var fs = require('fs');
-var path = require('path');
 
 class CloudStorage {
   constructor(options = {}) {
@@ -44,15 +43,17 @@ class CloudStorage {
       fileName = fileName[fileName.length - 1];
 
       // 文件不存在 或者 不符合上传标准
+      let fstat;
       try {
-        let fstat = fs.statSync(file);
+        fstat = fs.statSync(file);
       } catch(e) {
         return;
       }
 
       return {
         val, prefix, img, ext, postfix,
-        file, fileDist, fileName
+        file, fileDist, fileName, alias: currAlias,
+        fileSize: (fstat.size/1024).toFixed(1)
       }
     }).filter(imgData => imgData);
     if(!images.length) {
@@ -63,18 +64,14 @@ class CloudStorage {
     // 上传并删除图片
     for(var i=0, len=images.length; i<len; i++) {
       let imgData = images[i];
-      let hash = md5(imgData.img);
-      let img = imgData.img.replace(
-        `${imgData.fileName}.${imgData.ext}`,
-        `${hash}_${imgData.fileName}.${imgData.ext}`);
-      img = img.substring(1);
 
       // 上传
-      let { furl } = await uploadFile(imgData.file, img, this.opts);
+      let { furl } = await uploadFile(imgData, this.opts);
       // 修改代码
       op.code = op.code.replace(imgData.img, furl);
       // 删除文件
       fs.unlinkSync(imgData.fileDist);
+      console.log(colors.green('[删除]'), colors.magenta(`${imgData.fileSize}KB`), imgData.fileDist);
     }
 
     // 所有图片处理完后进行下一步
