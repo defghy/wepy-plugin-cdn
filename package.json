@@ -1,21 +1,15 @@
 {
   "name": "wepy-plugin-assets-cdn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "wepy upload cdn tool",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/defghy/wepy-plugin-assets-cdn.git"
-  },
+  "repository": "git@github.com:yuhufe/wepy-plugin-assets-cdn.git",
   "author": "huyu",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/defghy/wepy-plugin-assets-cdn/issues"
-  },
-  "homepage": "https://github.com/defghy/wepy-plugin-assets-cdn#readme",
+  "homepage": "https://github.com/yuhufe/wepy-plugin-assets-cdn#readme",
   "dependencies": {
     "base-64": "^0.1.0",
     "colors": "^1.3.2",
